@@ -1,97 +1,81 @@
 package com.example.musicbox;
+
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
     private MediaPlayer mediaPlayer;
-    private Button playButton;
-    private SeekBar mSeekbar;
+    private ImageView artistImage;
+    private TextView leftTime;
+    private TextView rightTime;
+    private SeekBar seekBar;
+    private Button prevBtn;
+    private Button playBtn;
+    private Button nextBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setUpUI();
+    }
 
-        mSeekbar = (SeekBar) findViewById(R.id.mSeekBar);
+    public void setUpUI() {
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.song);
-        mSeekbar.setMax(mediaPlayer.getDuration());
 
+        artistImage = (ImageView) findViewById(R.id.imageView);
+        leftTime = (TextView) findViewById(R.id.leftTime);
+        rightTime = (TextView) findViewById(R.id.rightTime);
+        seekBar = (SeekBar) findViewById(R.id.seekBar);
+        prevBtn = (Button) findViewById(R.id.prev);
+        playBtn = (Button) findViewById(R.id.pause);
+        nextBtn= (Button) findViewById(R.id.next);
 
-        mSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(fromUser){
-                    mediaPlayer.seekTo(progress);
-                }
-            }
+        prevBtn.setOnClickListener(this);
+        playBtn.setOnClickListener(this);
+        nextBtn.setOnClickListener(this);
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-
-                int duration = mp.getDuration();
-                String mDuration = String.valueOf(duration/1000);
-                Toast.makeText(getApplicationContext(),"duration :"+mDuration,Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-
-        playButton = (Button) findViewById(R.id.button);
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mediaPlayer.isPlaying()){
-                    pauseMusic();
-                }else {
-                    startMusic();
-                }
-            }
-        });
     }
 
-    public void pauseMusic(){
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.prev:
+                break;
+            case R.id.pause:
+                if(mediaPlayer.isPlaying()){
+                    pauseMuisc();
+                }else{
+                    startMusic();
+                }
+                break;
+            case R.id.next:
+                break;
+        }
+    }
+
+    public void pauseMuisc(){
         if(mediaPlayer != null){
-         mediaPlayer.pause();
-         playButton.setText("Play");
+            mediaPlayer.pause();
+            playBtn.setBackgroundResource(android.R.drawable.ic_media_pause);
         }
     }
 
     public void startMusic(){
         if(mediaPlayer != null){
             mediaPlayer.start();
-            playButton.setText("Pause");
+            playBtn.setBackgroundResource(android.R.drawable.ic_media_play);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-
-        if(mediaPlayer != null && mediaPlayer.isPlaying()){
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-        super.onDestroy();
     }
 
 }

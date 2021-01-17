@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MusicBox</string>
     <string name="btn">PLAY</string>
+    <string name="Despacito">Despacito</string>
+    <string name="artist">Justin Bieber</string>
+    <string name="left">0:00</string>
+    <string name="right">4:00</string>
 </resources>
