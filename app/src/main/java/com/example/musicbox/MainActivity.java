@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private MediaPlayer mediaPlayer;
@@ -26,13 +29,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setUpUI();
+
+        seekBar.setMax(mediaPlayer.getDuration());
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser){
+                    mediaPlayer.seekTo(progress);
+                }
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("mm:ss");
+
+                int currenPos = mediaPlayer.getCurrentPosition();
+                int duration = mediaPlayer.getDuration();
+
+                leftTime.setText(dateFormat.format(new Date(currenPos)));
+                rightTime.setText(dateFormat.format(new Date(duration - currenPos)));
+
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     public void setUpUI() {
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer = MediaPlayer.create(getApplicationContext(),R.raw.song);
-
         artistImage = (ImageView) findViewById(R.id.imageView);
         leftTime = (TextView) findViewById(R.id.leftTime);
         rightTime = (TextView) findViewById(R.id.rightTime);
@@ -40,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         prevBtn = (Button) findViewById(R.id.prev);
         playBtn = (Button) findViewById(R.id.pause);
         nextBtn= (Button) findViewById(R.id.next);
-
         prevBtn.setOnClickListener(this);
         playBtn.setOnClickListener(this);
         nextBtn.setOnClickListener(this);
